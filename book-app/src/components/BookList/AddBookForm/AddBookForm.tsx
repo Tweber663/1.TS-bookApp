@@ -2,30 +2,28 @@ import { FC, useState, FormEvent } from 'react';
 import { randomID } from '../../../utils/randomID';
 import { Book } from '../../../interfaces/Book.interface';
 import './AddBookForm.css'
+import { addBook } from '../../../redux/booksRedux';
+import { useAppDispatch } from '../../../utils/redux';
+import { useAppSelector } from '../../../utils/redux';
 
-type Props = {
- funcAddBook: (book: Book) => void, 
-}
+const AddBookForm: FC = () => {
 
-const AddBookForm: FC<Props> = ({funcAddBook}) => {
+  const dispatch = useAppDispatch();
+  const books = useAppSelector(state => state.books); 
 
-    const [title, setTitle] = useState<string>('');
-    const [author, setAuthor] = useState<string>(''); 
-    const [price, setPrice] = useState<number>(0);
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('');
+  const [price, setPrice] = useState(0);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {  
         e.preventDefault()
-        const book: Book = {
+        dispatch(addBook({
           id: randomID(10),
           title,
           author,
           price
-        }
-        funcAddBook(book)
-        setTitle('');
-        setAuthor('');
-        setPrice(0); 
-    }
+        }))
+      }
 
   return (
     <form onSubmit={handleSubmit} className="add-book-form">
